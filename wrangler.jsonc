@@ -4,5 +4,9 @@
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
-  }
+  },
+  "routes": [
+    { "pattern": "andrewoakeson.com", "custom_domain": true },
+    { "pattern": "www.andrewoakeson.com", "custom_domain": true }
+  ]
 }
