@@ -1,8 +1,10 @@
 ---
 import Base from "../layouts/Base.astro";
+import AgentTrace from "../components/AgentTrace.astro";
+import Guardrails from "../components/Guardrails.astro";
 
 const description =
-  "Senior software engineer. 13+ years building C#/.NET, Angular, and React systems, including identity, healthcare integrations, and applied AI.";
+  "Senior software engineer building AI agents with guardrails. 13+ years in C#/.NET, Angular, and React, including healthcare integrations and identity.";
 
 const person = {
   "@context": "https://schema.org",
@@ -20,6 +22,9 @@ const person = {
     name: "Weber State University",
   },
   knowsAbout: [
+    "AI agents",
+    "LLM integration",
+    "MCP",
     "C#",
     ".NET",
     "Angular",
@@ -42,10 +47,12 @@ const person = {
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header wrap">
     <h1>Andrew Oakeson</h1>
-    <p class="title">Senior software engineer.</p>
+    <p class="title">
+      Senior software engineer. I build AI agents with guardrails for real products.
+    </p>
     <p class="lede">
-      13+ years building C#/.NET, Angular, and React systems, including identity,
-      healthcare integrations, and applied AI.
+      13+ years in C#/.NET, Angular, and React, including healthcare integrations
+      and identity: SAML, OIDC, and SMART on FHIR.
     </p>
     <div class="actions">
       <a class="btn" href="/andrew-oakeson-resume.pdf" download>Resume</a>
@@ -55,6 +62,7 @@ const person = {
     <nav class="nav" aria-label="Sections">
       <a href="#work">What I work on</a>
       <a href="#selected">Selected work</a>
+      <a href="#ai-workflow">How I build with AI</a>
       <a href="#experience">Experience</a>
       <a href="#approach">How I work</a>
       <a href="#contact">Contact</a>
@@ -64,55 +72,24 @@ const person = {
     <section class="section" id="work">
       <h2>What I work on</h2>
       <article class="work-row">
+        <h3>AI agents and LLM integration</h3>
+        <div class="work-copy">
+          <p>
+            Tool-calling assistants inside products: typed tools, a bounded
+            tool-call loop, streamed tool steps, and role limits on sensitive
+            operations. MCP servers for agent tooling. Day-to-day delivery with
+            Claude Code, Cursor, and Codex.
+          </p>
+        </div>
+      </article>
+      <article class="work-row">
         <h3>Healthcare data and integrations</h3>
         <div class="work-copy">
           <p>
             Tenant-aware SMART on FHIR authorization on a .NET and Aidbox FHIR R4
             platform: scope and role constraints, token exchange, launch contexts,
             introspection, and membership. Provider and administration apps in
-            React, TypeScript, TanStack, and Tailwind CSS, covered by 158 and 68
-            automated tests. The backend suite is 615 tests.
-          </p>
-        </div>
-      </article>
-      <article class="work-row">
-        <h3>AI agents and LLM integration</h3>
-        <div class="work-copy">
-          <p>
-            Tool-calling assistants and agent workflows: typed tools, a bounded
-            tool-call loop, streaming tool steps, and role limits on sensitive
-            operations. Day-to-day delivery with Claude Code, Cursor, and Codex.
-          </p>
-          <div class="flow" data-flow>
-            <h3 id="flow-title">How that assistant runs</h3>
-            <p>
-              A questionnaire-authoring assistant in a .NET 8 and Angular app. This
-              is the control flow, not a live model.
-            </p>
-            <div class="flow-steps" role="group" aria-labelledby="flow-title">
-              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Ask</button>
-              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Call</button>
-              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Stream</button>
-              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Stop</button>
-              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Limits</button>
-            </div>
-            <ol class="flow-notes" id="flow-notes" aria-live="polite">
-              <li data-note>The author describes a questionnaire change in the Angular app.</li>
-              <li data-note>A .NET Chat Completions client sends the turn with about 20 typed tools.</li>
-              <li data-note>Tool steps stream back to the UI as they run.</li>
-              <li data-note>The loop ends after six rounds.</li>
-              <li data-note>Update and delete tools are not offered. A cross-environment push is role-restricted.</li>
-            </ol>
-          </div>
-        </div>
-      </article>
-      <article class="work-row">
-        <h3>Distributed backend</h3>
-        <div class="work-copy">
-          <p>
-            .NET APIs and Kotlin/Kafka services for event-driven fulfillment and
-            third-party data delivery, plus an import service with production
-            monitoring on AWS and Docker.
+            React, TypeScript, TanStack, and Tailwind CSS with SMART/PKCE sign-in.
           </p>
         </div>
       </article>
@@ -126,9 +103,32 @@ const person = {
           </p>
         </div>
       </article>
+      <article class="work-row">
+        <h3>Distributed backend</h3>
+        <div class="work-copy">
+          <p>
+            .NET APIs and Kotlin/Kafka services for event-driven fulfillment and
+            third-party data delivery, plus an import service with production
+            monitoring on AWS and Docker.
+          </p>
+        </div>
+      </article>
     </section>
     <section class="section" id="selected">
       <h2>Selected work</h2>
+      <article class="case">
+        <h3>A bounded questionnaire assistant</h3>
+        <p>
+          Authors needed help inside the product without unrestricted writes. I
+          built a .NET 8 and Angular assistant: a custom OpenAI Chat Completions
+          client, about 20 typed domain tools, a six-round tool-call cap, and
+          server-sent streaming of each tool step. Destructive update and delete
+          tools stay off the list, and cross-environment operations are
+          role-restricted.
+        </p>
+        <AgentTrace />
+        <Guardrails />
+      </article>
       <article class="case">
         <h3>Single sign-on for a healthcare partner</h3>
         <p>
@@ -146,17 +146,34 @@ const person = {
           production, with Splunk monitoring, and coordinated the offshore work.
         </p>
       </article>
-      <article class="case">
-        <h3>A bounded questionnaire assistant</h3>
-        <p>
-          Authors needed help inside the product without unrestricted writes. I
-          built a .NET 8 and Angular assistant: a custom OpenAI Chat Completions
-          client, about 20 typed domain tools, a six-round tool-call cap, and
-          server-sent streaming of each tool step. Destructive update and delete
-          tools stay off the list, and cross-environment operations are
-          role-restricted.
-        </p>
-      </article>
+    </section>
+    <section class="section" id="ai-workflow">
+      <h2>How I build with AI</h2>
+      <p>
+        I led the AI engineering effort at Opeeka: the principles the team used for
+        AI-assisted development, and demos of the agent workflows.
+      </p>
+      <ul class="approach">
+        <li>
+          Context lives in the repo. Instructions, scoped rules, and knowledge
+          profiles give Claude Code, Cursor, and Codex the same picture of the
+          system the team has.
+        </li>
+        <li>
+          Checks run on agent changes. I built coding-agent checks for secrets, PHI
+          in logs, and architecture rules, so regulated code gets flagged before
+          review.
+        </li>
+        <li>
+          Tests and review decide what merges. Generated code goes through the same
+          review and test suite as anything else.
+        </li>
+        <li>
+          On the next-generation platform, I designed the front-end and back-end
+          framework so coding agents can implement changes through knowledge
+          profiles and automated flows.
+        </li>
+      </ul>
     </section>
     <section class="section" id="experience">
       <h2>Experience</h2>
@@ -165,7 +182,7 @@ const person = {
           <p class="when">Nov 2023 to Oct 2026</p>
           <div class="job-body">
             <h3>Senior Software Engineer, Opeeka</h3>
-            <p>Healthcare platform work: SMART on FHIR, single sign-on, and in-product AI.</p>
+            <p>Healthcare platform work: in-product AI, SMART on FHIR, and single sign-on.</p>
           </div>
         </li>
         <li class="job">
@@ -209,31 +226,13 @@ const person = {
           </div>
         </li>
         <li class="job">
-          <p class="when">Apr 2016 to May 2017</p>
+          <p class="when">2013 to 2017</p>
           <div class="job-body">
-            <h3>Senior Software Engineer, Jeunesse Global</h3>
-            <p>AngularJS to Angular migration, administration redesign, and payment integrations.</p>
-          </div>
-        </li>
-        <li class="job">
-          <p class="when">May 2015 to Apr 2016</p>
-          <div class="job-body">
-            <h3>Senior Software Engineer, Megaplex Theatres</h3>
-            <p>Company website, kiosks, and digital signage.</p>
-          </div>
-        </li>
-        <li class="job">
-          <p class="when">Mar 2014 to May 2015</p>
-          <div class="job-body">
-            <h3>Software Engineer, Virtuoso Branding</h3>
-            <p>.NET applications.</p>
-          </div>
-        </li>
-        <li class="job">
-          <p class="when">Jan 2013 to Mar 2014</p>
-          <div class="job-body">
-            <h3>Software Developer, Gold Point Systems</h3>
-            <p>C# and .NET applications for loan processing.</p>
+            <h3>Earlier</h3>
+            <p>
+              .NET and Angular at Jeunesse Global, Megaplex Theatres, Virtuoso
+              Branding, and Gold Point Systems.
+            </p>
           </div>
         </li>
       </ol>
@@ -242,11 +241,6 @@ const person = {
     <section class="section" id="approach">
       <h2>How I work</h2>
       <ul class="approach">
-        <li>
-          Led the AI engineering effort at Opeeka: principles for AI-assisted
-          development with Claude Code, Cursor, and Codex, plus demos of the agent
-          workflows.
-        </li>
         <li>
           Mentored junior engineers at Filevine on architecture and API development,
           and led Angular localization.
@@ -276,52 +270,4 @@ const person = {
   <footer class="site-footer wrap">
     <p>Andrew Oakeson</p>
   </footer>
-  <script>
-    const root = document.querySelector<HTMLElement>("[data-flow]");
-    if (root) {
-      const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("button"));
-      const notes = Array.from(root.querySelectorAll<HTMLElement>("[data-note]"));
-
-      const show = (index: number) => {
-        buttons.forEach((button, i) => {
-          button.setAttribute("aria-pressed", i === index ? "true" : "false");
-        });
-        notes.forEach((note, i) => {
-          note.hidden = i !== index;
-        });
-      };
-
-      buttons.forEach((button, index) => {
-        button.addEventListener("click", () => {
-          show(index);
-        });
-      });
-
-      root.addEventListener("keydown", (event) => {
-        const target = event.target;
-        if (!(target instanceof HTMLButtonElement)) return;
-        const current = buttons.indexOf(target);
-        if (current < 0) return;
-
-        let next = current;
-        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-          next = (current + 1) % buttons.length;
-        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-          next = (current - 1 + buttons.length) % buttons.length;
-        } else if (event.key === "Home") {
-          next = 0;
-        } else if (event.key === "End") {
-          next = buttons.length - 1;
-        } else {
-          return;
-        }
-
-        event.preventDefault();
-        show(next);
-        buttons[next]?.focus();
-      });
-
-      show(0);
-    }
-  </script>
 </Base>

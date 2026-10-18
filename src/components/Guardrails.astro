@@ -1,0 +1,95 @@
+<ol class="guards" aria-label="How a request moves through the assistant's controls">
+  <li>
+    <p class="stage-name">Request</p>
+    <p class="stage-copy">The author asks in the app.</p>
+  </li>
+  <li class="is-stop">
+    <p class="stage-name">Tool list <span class="marker">Stop</span></p>
+    <p class="stage-copy">About 20 typed tools. No update or delete tools exist.</p>
+  </li>
+  <li class="is-stop">
+    <p class="stage-name">Role check <span class="marker">Stop</span></p>
+    <p class="stage-copy">Cross-environment push needs the right role.</p>
+  </li>
+  <li class="is-stop">
+    <p class="stage-name">Round cap <span class="marker">Stop</span></p>
+    <p class="stage-copy">The loop stops after six rounds.</p>
+  </li>
+  <li>
+    <p class="stage-name">Streamed result</p>
+    <p class="stage-copy">Each tool step shows up as it runs.</p>
+  </li>
+</ol>
+
+<style>
+  .guards {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-style: normal;
+  }
+
+  .guards li {
+    min-width: 0;
+    margin: 0;
+    padding: var(--space-xs) 0 var(--space-sm) var(--space-sm);
+    border-left: 1px solid var(--color-line);
+  }
+
+  .guards li.is-stop {
+    border-left: 3px solid var(--color-ink);
+    padding-left: calc(var(--space-sm) - 2px);
+  }
+
+  .stage-name {
+    color: var(--color-ink);
+    font-size: var(--text-base);
+    font-weight: 600;
+    overflow-wrap: anywhere;
+  }
+
+  .marker {
+    margin-left: var(--space-2xs);
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .stage-copy {
+    margin-top: var(--space-3xs);
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    overflow-wrap: anywhere;
+  }
+
+  @media (min-width: 52rem) {
+    .guards {
+      flex-direction: row;
+      align-items: stretch;
+    }
+
+    .guards li {
+      flex: 1 1 0;
+      border-left: 0;
+      border-top: 1px solid var(--color-line);
+      padding: var(--space-sm) var(--space-sm) 0 0;
+    }
+
+    .guards li.is-stop {
+      border-left: 0;
+      border-top: 3px solid var(--color-ink);
+      padding-top: calc(var(--space-sm) - 2px);
+      padding-left: 0;
+    }
+
+    .guards li:last-child {
+      padding-right: 0;
+    }
+  }
+</style>

@@ -1,0 +1,391 @@
+<figure data-agent-trace>
+  <div class="toolbar">
+    <p class="round" data-round-label aria-live="polite">Round 6 of 6</p>
+    <div class="controls">
+      <button type="button" class="btn" data-replay>Replay</button>
+      <button type="button" class="btn" data-toggle aria-pressed="false">Pause</button>
+    </div>
+  </div>
+  <div class="board">
+    <div class="col">
+      <p class="col-label">Conversation</p>
+      <div class="stack">
+        <div class="entry" data-step data-col="chat" data-order="1" data-round="1">
+          <p class="who">User</p>
+          <p class="msg">Is the intake questionnaire ready to publish?</p>
+        </div>
+        <div class="entry" data-step data-col="chat" data-order="7" data-round="4">
+          <p class="who">Assistant</p>
+          <p class="msg" data-stream>Not yet. Two branches can never be reached, so publish-readiness fails. Here are the questions on those branches. Removing them is your call.</p>
+        </div>
+        <div class="entry" data-step data-col="chat" data-order="8" data-round="4">
+          <p class="who">User</p>
+          <p class="msg">Push it to production anyway.</p>
+        </div>
+        <div class="entry" data-step data-col="chat" data-order="11" data-round="6">
+          <p class="who">Assistant</p>
+          <p class="msg" data-stream>I can't push to production with your role. An administrator can run that step.</p>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <p class="col-label">Agent trace</p>
+      <div class="stack">
+        <div class="entry" data-step data-col="trace" data-order="2" data-round="1">
+          <p class="line"><span>Round 1 of 6. tool: </span><span class="tool">find_questionnaire("intake")</span></p>
+          <p class="result" data-stream>found, status draft</p>
+        </div>
+        <div class="entry" data-step data-col="trace" data-order="3" data-round="2">
+          <p class="line"><span>Round 2 of 6. tool: </span><span class="tool">simulate_rules(intake)</span></p>
+          <p class="result" data-stream>2 branches never reached</p>
+        </div>
+        <div class="entry" data-step data-col="trace" data-order="4" data-round="3">
+          <p class="line"><span>Round 3 of 6. tool: </span><span class="tool">check_publish_readiness(intake)</span></p>
+          <p class="result" data-stream>not ready, unreachable branches</p>
+        </div>
+        <div
+          class="entry is-stop is-peak"
+          data-step
+          data-col="trace"
+          data-order="5"
+          data-round="3"
+          data-hold="long"
+        >
+          <p class="line"><span class="flag">Blocked. </span><span>model wants: </span><span class="tool is-struck">delete_question(...)</span></p>
+          <p class="result" data-stream>not on the tool list. Nothing was changed.</p>
+        </div>
+        <div class="entry" data-step data-col="trace" data-order="6" data-round="4">
+          <p class="line">Round 4 of 6.</p>
+          <p class="result" data-stream>answer streamed to the author</p>
+        </div>
+        <div class="entry is-stop" data-step data-col="trace" data-order="9" data-round="5">
+          <p class="line"><span class="flag">Denied. </span><span>Round 5 of 6. tool: </span><span class="tool is-struck">push_to_environment("production")</span></p>
+          <p class="result" data-stream>denied, role required</p>
+        </div>
+        <div class="entry" data-step data-col="trace" data-order="10" data-round="6">
+          <p class="line">Stopped.</p>
+          <p class="result" data-stream>answer streamed. Hard cap is 6 rounds.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <figcaption>
+    Replay of the control flow, not a live model. Tool names are simplified, and no customer data is
+    shown.
+  </figcaption>
+</figure>
+
+<style>
+  [data-agent-trace] {
+    --font-mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+    margin: 0;
+    min-width: 0;
+    max-width: 100%;
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-base);
+    font-style: normal;
+  }
+
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-2xs) var(--space-sm);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--color-line);
+  }
+
+  .round {
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2xs);
+  }
+
+  .board {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: var(--space-md);
+    min-width: 0;
+  }
+
+  .col,
+  .stack,
+  .entry {
+    min-width: 0;
+  }
+
+  .col {
+    position: relative;
+  }
+
+  .col-label {
+    margin-bottom: var(--space-2xs);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-style: normal;
+    font-weight: 600;
+  }
+
+  .stack {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .entry {
+    padding-block: var(--space-xs);
+    border-top: 1px solid var(--color-line);
+    color: var(--color-ink);
+    font-size: var(--text-sm);
+  }
+
+  .who {
+    margin-bottom: var(--space-3xs);
+    color: var(--color-muted);
+    font-size: var(--text-sm);
+    font-weight: 600;
+  }
+
+  .msg {
+    color: var(--color-ink);
+    font-size: var(--text-base);
+    overflow-wrap: anywhere;
+  }
+
+  .line,
+  .result,
+  .who,
+  .col-label,
+  figcaption {
+    overflow-wrap: anywhere;
+  }
+
+  .tool {
+    font-family: var(--font-mono);
+    font-size: var(--text-sm);
+    overflow-wrap: anywhere;
+  }
+
+  .is-struck {
+    text-decoration: line-through;
+  }
+
+  .result {
+    margin-top: var(--space-3xs);
+    color: var(--color-muted);
+  }
+
+  .flag {
+    font-weight: 600;
+  }
+
+  .entry.is-stop {
+    border-left: 3px solid var(--color-ink);
+    padding-left: var(--space-sm);
+  }
+
+  .entry.is-peak {
+    background: var(--color-line);
+    border-color: var(--color-ink);
+    border-style: solid;
+    border-width: 1px 1px 1px 3px;
+    padding-inline: var(--space-sm);
+  }
+
+  .entry.is-peak .result,
+  .entry.is-peak .flag {
+    color: var(--color-ink);
+    font-weight: 600;
+  }
+
+  figcaption {
+    margin-top: var(--space-sm);
+    color: var(--color-muted);
+    font-family: var(--font-body);
+    font-size: var(--text-sm);
+    font-style: normal;
+    font-weight: 400;
+  }
+
+  [data-agent-trace].is-reduced .controls {
+    display: none;
+  }
+
+  [data-agent-trace].is-live [data-step]:not(.is-on) {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (min-width: 52rem) {
+    .board {
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      column-gap: var(--space-lg);
+      align-items: start;
+    }
+  }
+</style>
+
+<script>
+  const chunkMs = 18;
+  const chunkSize = 2;
+  const gapMs = 700;
+  const holdMs = 1200;
+
+  function showPlaying(button: HTMLButtonElement, playing: boolean): void {
+    button.textContent = playing ? "Pause" : "Play";
+    button.setAttribute("aria-pressed", playing ? "false" : "true");
+  }
+
+  function setupTrace(root: HTMLElement): void {
+    const roundLabel = root.querySelector<HTMLElement>("[data-round-label]");
+    const replay = root.querySelector<HTMLButtonElement>("[data-replay]");
+    const toggle = root.querySelector<HTMLButtonElement>("[data-toggle]");
+    const steps = Array.from(root.querySelectorAll<HTMLElement>("[data-step]")).sort(
+      (a, b) => Number(a.dataset.order ?? "0") - Number(b.dataset.order ?? "0"),
+    );
+    const originals = new Map<HTMLElement, string>();
+
+    for (const node of root.querySelectorAll<HTMLElement>("[data-stream]")) {
+      originals.set(node, (node.textContent ?? "").replace(/\s+/g, " ").trim());
+    }
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      root.classList.add("is-reduced");
+      return;
+    }
+
+    if (!roundLabel || !replay || !toggle || steps.length === 0) return;
+
+    root.classList.add("is-live");
+    showPlaying(toggle, false);
+
+    let runId = 0;
+    let paused = false;
+    let running = false;
+    let started = false;
+
+    const sleep = (ms: number, id: number): Promise<void> =>
+      new Promise((resolve) => {
+        let elapsed = 0;
+        let last = performance.now();
+        const timer = window.setInterval(() => {
+          if (id !== runId) {
+            window.clearInterval(timer);
+            resolve();
+            return;
+          }
+          const now = performance.now();
+          if (!paused) elapsed += now - last;
+          last = now;
+          if (elapsed >= ms) {
+            window.clearInterval(timer);
+            resolve();
+          }
+        }, 16);
+      });
+
+    const typeInto = async (node: HTMLElement, id: number): Promise<void> => {
+      const full = originals.get(node) ?? "";
+      node.textContent = "";
+      for (let index = 0; index < full.length; ) {
+        await sleep(chunkMs, id);
+        if (id !== runId) return;
+        index = Math.min(full.length, index + chunkSize);
+        node.textContent = full.slice(0, index);
+      }
+    };
+
+    const reveal = async (step: HTMLElement, id: number): Promise<void> => {
+      const round = step.dataset.round;
+      if (round) {
+        const label = `Round ${round} of 6`;
+        if (roundLabel.textContent !== label) roundLabel.textContent = label;
+      }
+      step.classList.add("is-on");
+      for (const node of step.querySelectorAll<HTMLElement>("[data-stream]")) {
+        await typeInto(node, id);
+        if (id !== runId) return;
+      }
+    };
+
+    const reset = (): void => {
+      for (const [node, text] of originals) node.textContent = text;
+      for (const step of steps) step.classList.remove("is-on");
+    };
+
+    const play = async (): Promise<void> => {
+      const id = ++runId;
+      paused = false;
+      running = true;
+      started = true;
+      showPlaying(toggle, true);
+      reset();
+      roundLabel.textContent = "Round 1 of 6";
+
+      for (let index = 0; index < steps.length; index += 1) {
+        if (id !== runId) return;
+        const step = steps[index];
+        if (!step) return;
+        if (index > 0) {
+          const previous = steps[index - 1];
+          const wait =
+            step.dataset.hold === "long" || previous?.dataset.hold === "long" ? holdMs : gapMs;
+          await sleep(wait, id);
+          if (id !== runId) return;
+        }
+        await reveal(step, id);
+      }
+
+      if (id !== runId) return;
+      running = false;
+      showPlaying(toggle, false);
+    };
+
+    replay.addEventListener("click", () => {
+      void play();
+    });
+
+    toggle.addEventListener("click", () => {
+      if (!running) {
+        void play();
+        return;
+      }
+      paused = !paused;
+      showPlaying(toggle, !paused);
+    });
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting || started) continue;
+          observer.disconnect();
+          void play();
+        }
+      },
+      { threshold: 0.35 },
+    );
+    observer.observe(root);
+  }
+
+  for (const root of document.querySelectorAll<HTMLElement>("[data-agent-trace]")) {
+    setupTrace(root);
+  }
+</script>

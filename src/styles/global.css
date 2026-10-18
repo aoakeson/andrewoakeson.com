@@ -131,7 +131,6 @@ h1 {
 }
 
 .actions,
-.flow-steps,
 .nav {
   display: flex;
   flex-wrap: wrap;
@@ -263,37 +262,6 @@ h1 {
   margin-top: var(--space-sm);
 }
 
-.flow {
-  margin-top: var(--space-md);
-  padding-top: var(--space-md);
-  border-top: 1px solid var(--color-line);
-  max-width: var(--measure);
-}
-
-.flow h3 {
-  margin-bottom: var(--space-2xs);
-  font-size: var(--text-base);
-}
-
-.flow > p {
-  margin-top: 0;
-}
-
-.flow-steps {
-  gap: var(--space-2xs);
-  margin-top: var(--space-sm);
-}
-
-.flow-notes {
-  margin: var(--space-sm) 0 0;
-  padding-left: 0;
-  list-style: none;
-}
-
-.flow-notes li + li {
-  margin-top: var(--space-xs);
-}
-
 .timeline {
   margin: 0;
   padding: 0;
@@ -315,6 +283,10 @@ h1 {
 
 .education {
   margin-top: var(--space-lg);
+}
+
+.section > p + .approach {
+  margin-top: var(--space-md);
 }
 
 .approach {
