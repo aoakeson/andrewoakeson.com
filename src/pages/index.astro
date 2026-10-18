@@ -1,0 +1,327 @@
+---
+import Base from "../layouts/Base.astro";
+
+const description =
+  "Senior software engineer. 13+ years building C#/.NET, Angular, and React systems, including identity, healthcare integrations, and applied AI.";
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: "Andrew Oakeson",
+  jobTitle: "Senior Software Engineer",
+  email: "mailto:andrew@andrewoakeson.com",
+  url: "https://andrewoakeson.com/",
+  sameAs: [
+    "https://www.linkedin.com/in/andrew-oakeson/",
+    "https://github.com/aoakeson",
+  ],
+  alumniOf: {
+    "@type": "CollegeOrUniversity",
+    name: "Weber State University",
+  },
+  knowsAbout: [
+    "C#",
+    ".NET",
+    "Angular",
+    "React",
+    "TypeScript",
+    "FHIR",
+    "SAML",
+    "OIDC",
+  ],
+};
+---
+
+<Base
+  title="Andrew Oakeson, Senior Software Engineer"
+  description={description}
+  canonical="https://andrewoakeson.com/"
+  social
+  jsonLd={JSON.stringify(person)}
+>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header wrap">
+    <h1>Andrew Oakeson</h1>
+    <p class="title">Senior software engineer.</p>
+    <p class="lede">
+      13+ years building C#/.NET, Angular, and React systems, including identity,
+      healthcare integrations, and applied AI.
+    </p>
+    <div class="actions">
+      <a class="btn" href="/andrew-oakeson-resume.pdf" download>Resume</a>
+      <a class="btn" href="https://www.linkedin.com/in/andrew-oakeson/">LinkedIn</a>
+      <a class="btn btn-fill" href="mailto:andrew@andrewoakeson.com">Email</a>
+    </div>
+    <nav class="nav" aria-label="Sections">
+      <a href="#work">What I work on</a>
+      <a href="#selected">Selected work</a>
+      <a href="#experience">Experience</a>
+      <a href="#approach">How I work</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+  <main id="main" class="wrap" tabindex="-1">
+    <section class="section" id="work">
+      <h2>What I work on</h2>
+      <article class="work-row">
+        <h3>Healthcare data and integrations</h3>
+        <div class="work-copy">
+          <p>
+            Tenant-aware SMART on FHIR authorization on a .NET and Aidbox FHIR R4
+            platform: scope and role constraints, token exchange, launch contexts,
+            introspection, and membership. Provider and administration apps in
+            React, TypeScript, TanStack, and Tailwind CSS, covered by 158 and 68
+            automated tests. The backend suite is 615 tests.
+          </p>
+        </div>
+      </article>
+      <article class="work-row">
+        <h3>AI agents and LLM integration</h3>
+        <div class="work-copy">
+          <p>
+            Tool-calling assistants and agent workflows: typed tools, a bounded
+            tool-call loop, streaming tool steps, and role limits on sensitive
+            operations. Day-to-day delivery with Claude Code, Cursor, and Codex.
+          </p>
+          <div class="flow" data-flow>
+            <h3 id="flow-title">How that assistant runs</h3>
+            <p>
+              A questionnaire-authoring assistant in a .NET 8 and Angular app. This
+              is the control flow, not a live model.
+            </p>
+            <div class="flow-steps" role="group" aria-labelledby="flow-title">
+              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Ask</button>
+              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Call</button>
+              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Stream</button>
+              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Stop</button>
+              <button type="button" class="step" aria-pressed="false" aria-controls="flow-notes">Limits</button>
+            </div>
+            <ol class="flow-notes" id="flow-notes" aria-live="polite">
+              <li data-note>The author describes a questionnaire change in the Angular app.</li>
+              <li data-note>A .NET Chat Completions client sends the turn with about 20 typed tools.</li>
+              <li data-note>Tool steps stream back to the UI as they run.</li>
+              <li data-note>The loop ends after six rounds.</li>
+              <li data-note>Update and delete tools are not offered. A cross-environment push is role-restricted.</li>
+            </ol>
+          </div>
+        </div>
+      </article>
+      <article class="work-row">
+        <h3>Distributed backend</h3>
+        <div class="work-copy">
+          <p>
+            .NET APIs and Kotlin/Kafka services for event-driven fulfillment and
+            third-party data delivery, plus an import service with production
+            monitoring on AWS and Docker.
+          </p>
+        </div>
+      </article>
+      <article class="work-row">
+        <h3>Identity and security</h3>
+        <div class="work-copy">
+          <p>
+            SAML and OIDC/PKCE single sign-on, just-in-time provisioning, tenant
+            access control, Auth0, Azure AD B2C, and Azure Key Vault. Includes an
+            Okta to Azure AD B2C handoff for a state social-services integration.
+          </p>
+        </div>
+      </article>
+    </section>
+    <section class="section" id="selected">
+      <h2>Selected work</h2>
+      <article class="case">
+        <h3>Single sign-on for a healthcare partner</h3>
+        <p>
+          A healthcare partner needed IdP-initiated sign-on into a multi-tenant
+          product, including provisioning. I built SAML single sign-on with tenant
+          mapping and Microsoft Graph provisioning, and moved the signing keys into
+          Azure Key Vault. It has been in production since early 2024.
+        </p>
+      </article>
+      <article class="case">
+        <h3>Event services at Young Living</h3>
+        <p>
+          Fulfillment needed event-driven delivery to other systems. I built
+          Kotlin/Kafka microservices for that delivery, from design through
+          production, with Splunk monitoring, and coordinated the offshore work.
+        </p>
+      </article>
+      <article class="case">
+        <h3>A bounded questionnaire assistant</h3>
+        <p>
+          Authors needed help inside the product without unrestricted writes. I
+          built a .NET 8 and Angular assistant: a custom OpenAI Chat Completions
+          client, about 20 typed domain tools, a six-round tool-call cap, and
+          server-sent streaming of each tool step. Destructive update and delete
+          tools stay off the list, and cross-environment operations are
+          role-restricted.
+        </p>
+      </article>
+    </section>
+    <section class="section" id="experience">
+      <h2>Experience</h2>
+      <ol class="timeline">
+        <li class="job">
+          <p class="when">Nov 2023 to Oct 2026</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer, Opeeka</h3>
+            <p>Healthcare platform work: SMART on FHIR, single sign-on, and in-product AI.</p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Apr 2023 to Oct 2023</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer - Lead, BENlabs</h3>
+            <p>
+              Browser extensions across Angular, React, and Vue, with .NET services
+              and JWT authentication for AI integrations.
+            </p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Sep 2020 to Dec 2022</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer, Filevine</h3>
+            <p>
+              Owned the Import service. Angular and Svelte front-end workflows, and
+              mentorship on architecture and APIs.
+            </p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Nov 2019 to Sep 2020</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer, Young Living</h3>
+            <p>
+              Kotlin/Kafka fulfillment services, from design through production, with
+              offshore coordination.
+            </p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">May 2017 to Nov 2019</p>
+          <div class="job-body">
+            <h3>Senior Software Architect and Engineer, Alpine Testing Solutions</h3>
+            <p>
+              Legacy platform redesign, WCF services moved to GraphQL, and mentoring
+              for remote engineers.
+            </p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Apr 2016 to May 2017</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer, Jeunesse Global</h3>
+            <p>AngularJS to Angular migration, administration redesign, and payment integrations.</p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">May 2015 to Apr 2016</p>
+          <div class="job-body">
+            <h3>Senior Software Engineer, Megaplex Theatres</h3>
+            <p>Company website, kiosks, and digital signage.</p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Mar 2014 to May 2015</p>
+          <div class="job-body">
+            <h3>Software Engineer, Virtuoso Branding</h3>
+            <p>.NET applications.</p>
+          </div>
+        </li>
+        <li class="job">
+          <p class="when">Jan 2013 to Mar 2014</p>
+          <div class="job-body">
+            <h3>Software Developer, Gold Point Systems</h3>
+            <p>C# and .NET applications for loan processing.</p>
+          </div>
+        </li>
+      </ol>
+      <p class="education">BS, Computer Science, Weber State University.</p>
+    </section>
+    <section class="section" id="approach">
+      <h2>How I work</h2>
+      <ul class="approach">
+        <li>
+          Led the AI engineering effort at Opeeka: principles for AI-assisted
+          development with Claude Code, Cursor, and Codex, plus demos of the agent
+          workflows.
+        </li>
+        <li>
+          Mentored junior engineers at Filevine on architecture and API development,
+          and led Angular localization.
+        </li>
+        <li>
+          Coordinated offshore development at Young Living while taking Kafka
+          services from design through production.
+        </li>
+        <li>
+          Mentored remote engineers at Alpine Testing Solutions and led design
+          discussions during the platform redesign.
+        </li>
+      </ul>
+    </section>
+    <section class="section" id="contact">
+      <h2>Contact</h2>
+      <p>Email or LinkedIn is the best way to reach me.</p>
+      <ul class="contact-list">
+        <li><a href="mailto:andrew@andrewoakeson.com">andrew@andrewoakeson.com</a></li>
+        <li>
+          <a href="https://www.linkedin.com/in/andrew-oakeson/">linkedin.com/in/andrew-oakeson</a>
+        </li>
+        <li><a class="quiet" href="https://github.com/aoakeson">github.com/aoakeson</a></li>
+      </ul>
+    </section>
+  </main>
+  <footer class="site-footer wrap">
+    <p>Andrew Oakeson</p>
+  </footer>
+  <script>
+    const root = document.querySelector<HTMLElement>("[data-flow]");
+    if (root) {
+      const buttons = Array.from(root.querySelectorAll<HTMLButtonElement>("button"));
+      const notes = Array.from(root.querySelectorAll<HTMLElement>("[data-note]"));
+
+      const show = (index: number) => {
+        buttons.forEach((button, i) => {
+          button.setAttribute("aria-pressed", i === index ? "true" : "false");
+        });
+        notes.forEach((note, i) => {
+          note.hidden = i !== index;
+        });
+      };
+
+      buttons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          show(index);
+        });
+      });
+
+      root.addEventListener("keydown", (event) => {
+        const target = event.target;
+        if (!(target instanceof HTMLButtonElement)) return;
+        const current = buttons.indexOf(target);
+        if (current < 0) return;
+
+        let next = current;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          next = (current + 1) % buttons.length;
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          next = (current - 1 + buttons.length) % buttons.length;
+        } else if (event.key === "Home") {
+          next = 0;
+        } else if (event.key === "End") {
+          next = buttons.length - 1;
+        } else {
+          return;
+        }
+
+        event.preventDefault();
+        show(next);
+        buttons[next]?.focus();
+      });
+
+      show(0);
+    }
+  </script>
+</Base>

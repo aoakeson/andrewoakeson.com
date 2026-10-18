@@ -1,0 +1,23 @@
+{
+  "name": "andrewoakeson-com",
+  "type": "module",
+  "version": "0.0.1",
+  "engines": {
+    "node": ">=22.22.0"
+  },
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "deploy": "astro build && wrangler deploy",
+    "astro": "astro"
+  },
+  "dependencies": {
+    "@fontsource/newsreader": "^5.3.0",
+    "@fontsource/public-sans": "^5.3.0",
+    "astro": "^7.4.0"
+  },
+  "devDependencies": {
+    "wrangler": "^4.151.1"
+  }
+}

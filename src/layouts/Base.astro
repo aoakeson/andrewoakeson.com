@@ -1,0 +1,51 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description?: string;
+  robots?: string;
+  canonical?: string;
+  social?: boolean;
+  jsonLd?: string;
+}
+
+const {
+  title,
+  description,
+  robots = "index,follow",
+  canonical,
+  social = false,
+  jsonLd,
+} = Astro.props;
+
+const themeColor = "oklch(97.2% 0.006 250)";
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    {canonical && <link rel="canonical" href={canonical} />}
+    <meta name="robots" content={robots} />
+    <meta name="theme-color" content={themeColor} />
+    {
+      social && description && (
+        <>
+          <meta property="og:title" content={title} />
+          <meta property="og:description" content={description} />
+          <meta property="og:url" content="https://andrewoakeson.com/" />
+          <meta property="og:type" content="website" />
+        </>
+      )
+    }
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    {jsonLd && <script type="application/ld+json" set:html={jsonLd} />}
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

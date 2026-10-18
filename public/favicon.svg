@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <style>
+    svg {
+      --color-accent: oklch(38% 0.08 250);
+      color: var(--color-accent);
+    }
+  </style>
+  <path d="M7 54 L19 12 L31 54 M12 38 H26" stroke="currentColor" stroke-width="4" stroke-linejoin="miter" stroke-linecap="square"/>
+  <circle cx="48" cy="36" r="14" stroke="currentColor" stroke-width="4"/>
+</svg>
