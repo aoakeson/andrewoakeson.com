@@ -4,7 +4,7 @@ import AgentTrace from "../components/AgentTrace.astro";
 import Guardrails from "../components/Guardrails.astro";
 
 const description =
-  "Senior software engineer building AI agents with guardrails. 13+ years in C#/.NET, Angular, and React, including healthcare integrations and identity.";
+  "Senior software engineer in Las Vegas. 13+ years building LLM agents, MCP servers, and coding-agent tooling on C#/.NET and TypeScript.";
 
 const person = {
   "@context": "https://schema.org",
@@ -21,14 +21,20 @@ const person = {
     "@type": "CollegeOrUniversity",
     name: "Weber State University",
   },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Las Vegas",
+    addressRegion: "NV",
+    addressCountry: "US",
+  },
   knowsAbout: [
-    "AI agents",
-    "LLM integration",
-    "MCP",
+    "LLM agents",
+    "tool calling",
+    "Model Context Protocol",
+    "Claude Code",
+    "OpenAI API",
     "C#",
     ".NET",
-    "Angular",
-    "React",
     "TypeScript",
     "FHIR",
     "SAML",
@@ -47,12 +53,14 @@ const person = {
   <a class="skip" href="#main">Skip to content</a>
   <header class="site-header wrap">
     <h1>Andrew Oakeson</h1>
+    <p class="where">Las Vegas, Nevada</p>
     <p class="title">
-      Senior software engineer. I build AI agents with guardrails for real products.
+      Senior software engineer. I build LLM agents and the tooling that keeps them in bounds.
     </p>
     <p class="lede">
-      13+ years in C#/.NET, Angular, and React, including healthcare integrations
-      and identity: SAML, OIDC, and SMART on FHIR.
+      13+ years in C#/.NET and TypeScript. Recent work is tool-calling assistants,
+      an MCP server, and coding-agent plugins, on top of production authentication
+      and healthcare integrations.
     </p>
     <div class="actions">
       <a class="btn" href="/andrew-oakeson-resume.pdf" download>Resume</a>
@@ -60,6 +68,7 @@ const person = {
       <a class="btn btn-fill" href="mailto:andrew@andrewoakeson.com">Email</a>
     </div>
     <nav class="nav" aria-label="Sections">
+      <a href="#skills">Technical skills</a>
       <a href="#work">What I work on</a>
       <a href="#selected">Selected work</a>
       <a href="#ai-workflow">How I build with AI</a>
@@ -69,16 +78,65 @@ const person = {
     </nav>
   </header>
   <main id="main" class="wrap" tabindex="-1">
+    <section class="section" id="skills">
+      <h2>Technical skills</h2>
+      <dl class="skills">
+        <div class="skill">
+          <dt>AI applications</dt>
+          <dd>
+            OpenAI Chat Completions and Responses APIs, Gemini API, Vercel AI SDK,
+            tool calling, structured outputs, strict JSON Schema and Zod, few-shot
+            grounding, multimodal image editing.
+          </dd>
+        </div>
+        <div class="skill">
+          <dt>Agent context</dt>
+          <dd>
+            Open Knowledge Format, AGENTS.md and CLAUDE.md, task routers,
+            path-scoped rules, knowledge graphs, CI knowledge validation,
+            documentation provenance.
+          </dd>
+        </div>
+        <div class="skill">
+          <dt>AI-assisted delivery</dt>
+          <dd>
+            Claude Code, Codex, Cursor, MCP servers, plugins, hooks, and skills,
+            multi-agent orchestration, worktrees, cross-model review, adversarial
+            testing.
+          </dd>
+        </div>
+        <div class="skill">
+          <dt>Backend and data</dt>
+          <dd>
+            C#, ASP.NET Core, TypeScript, Python, Node.js, SQL Server, PostgreSQL
+            and Supabase, Entity Framework Core, REST, GraphQL, Kafka.
+          </dd>
+        </div>
+        <div class="skill">
+          <dt>Frontend and cloud</dt>
+          <dd>
+            React, Angular, Next.js, Astro, Azure, AWS, Cloudflare Workers, Docker.
+          </dd>
+        </div>
+        <div class="skill">
+          <dt>Security and testing</dt>
+          <dd>
+            OAuth 2.0 and OIDC, PKCE, SAML, Azure AD B2C, Auth0, Key Vault, FHIR
+            and SMART on FHIR, xUnit, Vitest, GitHub Actions.
+          </dd>
+        </div>
+      </dl>
+    </section>
     <section class="section" id="work">
       <h2>What I work on</h2>
       <article class="work-row">
         <h3>AI agents and LLM integration</h3>
         <div class="work-copy">
           <p>
-            Tool-calling assistants inside products: typed tools, a bounded
-            tool-call loop, streamed tool steps, and role limits on sensitive
-            operations. MCP servers for agent tooling. Day-to-day delivery with
-            Claude Code, Cursor, and Codex.
+            Tool-calling assistants, MCP servers, and coding-agent plugins.
+            Typed tools, bounded loops, streamed tool steps, and role limits.
+            Day-to-day delivery with Claude Code, Cursor, and Codex, including
+            cross-model review.
           </p>
         </div>
       </article>
@@ -117,14 +175,33 @@ const person = {
     <section class="section" id="selected">
       <h2>Selected work</h2>
       <article class="case">
+        <h3>Coding-agent plugins and context</h3>
+        <p>
+          Coding agents working in a healthcare codebase needed a required reading
+          list and a way to catch unsafe changes. I authored okf-live and okf-lens,
+          two TypeScript Claude Code plugins that track agent and subagent document
+          reads, expose an MCP task-route tool, and check for secrets, protected
+          health information in logs, and architecture violations. I tested bypass
+          attempts in headless and interactive sessions.
+        </p>
+        <p>
+          The context they route is Open Knowledge Format for the platform: 100+
+          concepts, about 30 architecture decision records, task routing, shared
+          AGENTS.md and CLAUDE.md instructions, path-scoped rules, and CI checks
+          on metadata and links. AI-authored documents stay in a human-verification
+          state until someone checks them.
+        </p>
+      </article>
+      <article class="case">
         <h3>A bounded questionnaire assistant</h3>
         <p>
           Authors needed help inside the product without unrestricted writes. I
-          built a .NET 8 and Angular assistant: a custom OpenAI Chat Completions
-          client, about 20 typed domain tools, a six-round tool-call cap, and
-          server-sent streaming of each tool step. Destructive update and delete
-          tools stay off the list, and cross-environment operations are
-          role-restricted.
+          built a GPT-4o prototype in .NET and Angular: a custom Chat Completions
+          client, about 20 domain tools, a six-round cap, and Angular streaming
+          over server-sent events. Update and delete tools stay off the list.
+          The tools cover rule simulation, publish-readiness checks, and
+          role-restricted publishing. This is a working prototype, not a shipped
+          product feature.
         </p>
         <AgentTrace />
         <Guardrails />
@@ -139,39 +216,49 @@ const person = {
         </p>
       </article>
       <article class="case">
-        <h3>Event services at Young Living</h3>
+        <h3>An always-on operations agent</h3>
         <p>
-          Fulfillment needed event-driven delivery to other systems. I built
-          Kotlin/Kafka microservices for that delivery, from design through
-          production, with Splunk monitoring, and coordinated the offshore work.
+          I designed and operate a Claude Code agent, with MCP and Python, used
+          daily by business partners and two outside clients for email and
+          guest-message drafting, pricing briefs, research, and web development.
+          Resources are isolated across 20+ Discord channels. Outbound messages
+          require human approval, and each channel's sender address is locked in
+          code and checked with Google OAuth.
+        </p>
+        <p>
+          A separate scheduled agent researches, writes, and self-scores sourced
+          articles, then delegates translation into five languages to parallel
+          subagents. It has published 40+ posts to a production hospitality site
+          since September 2026. The validator scores the draft. It is not a hard
+          gate on publishing.
         </p>
       </article>
     </section>
     <section class="section" id="ai-workflow">
       <h2>How I build with AI</h2>
       <p>
-        I led the AI engineering effort at Opeeka: the principles the team used for
-        AI-assisted development, and demos of the agent workflows.
+        I use Claude Code, Cursor, and Codex for architecture, implementation,
+        debugging, and cross-model review. The controls sit in the repository.
       </p>
       <ul class="approach">
         <li>
-          Context lives in the repo. Instructions, scoped rules, and knowledge
-          profiles give Claude Code, Cursor, and Codex the same picture of the
-          system the team has.
+          One instruction source. AGENTS.md holds the shared rules, and CLAUDE.md
+          imports them, so each coding agent starts from the same guidance.
         </li>
         <li>
-          Checks run on agent changes. I built coding-agent checks for secrets, PHI
-          in logs, and architecture rules, so regulated code gets flagged before
-          review.
+          Task routers and path-scoped rules point an agent at the API contract,
+          tenant rules, or protected-data notes for the files it is about to edit.
         </li>
         <li>
-          Tests and review decide what merges. Generated code goes through the same
-          review and test suite as anything else.
+          Plugins record whether an agent actually read those documents, and pattern
+          checks flag secrets, PHI in logs, and architecture violations. I ran
+          adversarial sessions against skipped reading and prohibited patterns.
         </li>
         <li>
-          On the next-generation platform, I designed the front-end and back-end
-          framework so coding agents can implement changes through knowledge
-          profiles and automated flows.
+          For a legacy documentation pass, I directed about 40 agents with
+          read-only source access and separate output ownership. That produced
+          about 680 concepts and 2,400 relationships. The counts are the size of
+          the knowledge bundle, not a productivity score.
         </li>
       </ul>
     </section>
@@ -182,7 +269,10 @@ const person = {
           <p class="when">Nov 2023 to Oct 2026</p>
           <div class="job-body">
             <h3>Senior Software Engineer, Opeeka</h3>
-            <p>Healthcare platform work: in-product AI, SMART on FHIR, and single sign-on.</p>
+            <p>
+              Coding-agent context and plugins, a bounded GPT-4o assistant prototype,
+              production SAML, and SMART on FHIR APIs.
+            </p>
           </div>
         </li>
         <li class="job">
@@ -210,8 +300,8 @@ const person = {
           <div class="job-body">
             <h3>Senior Software Engineer, Young Living</h3>
             <p>
-              Kotlin/Kafka fulfillment services, from design through production, with
-              offshore coordination.
+              Seven Kotlin/Kafka microservices for fulfillment, from design through
+              production, with Splunk monitoring and offshore coordination.
             </p>
           </div>
         </li>

@@ -121,6 +121,10 @@ h1 {
   font-size: var(--text-display);
 }
 
+.where {
+  margin-top: var(--space-2xs);
+}
+
 .title {
   margin-top: var(--space-xs);
   font-size: var(--text-lg);
@@ -275,6 +279,7 @@ h1 {
 }
 
 .when,
+.where,
 .education,
 .site-footer p {
   color: var(--color-muted);
@@ -338,9 +343,31 @@ h1 {
   margin-top: var(--space-sm);
 }
 
+.skills {
+  margin: 0;
+}
+
+.skill {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--space-3xs);
+  padding-block: var(--space-sm);
+  border-top: 1px solid var(--color-line);
+}
+
+.skill dt {
+  font-weight: 600;
+}
+
+.skill dd {
+  margin: 0;
+  max-width: var(--measure);
+}
+
 @media (min-width: 52rem) {
   .work-row,
-  .job {
+  .job,
+  .skill {
     grid-template-columns: minmax(0, 16rem) minmax(0, 1fr);
     column-gap: var(--space-lg);
     align-items: start;
