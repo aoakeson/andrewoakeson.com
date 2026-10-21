@@ -1,117 +1,230 @@
 ---
-const prompts = ["FHIR work", "Shipped SSO", "Agent guardrails"];
+const prompts = [
+  { label: "Contact", text: "How do I contact him?" },
+  { label: "Resume", text: "Where can I read his resume?" },
+  { label: "LinkedIn", text: "What is his LinkedIn?" },
+  { label: "GitHub", text: "What is his GitHub?" },
+  { label: "AI agents", text: "What AI agents has he built?" },
+  { label: "Match a job", text: "" },
+];
 ---
 
-<form class="ask" data-ask>
-  <p id="ask-label">
-    Ask about the work on this page, or paste a job description. Answers use only
-    that public profile and cite the section they used.
-  </p>
+<section class="ask-panel" data-ask aria-labelledby="ask-heading">
+  <div class="ask-head">
+    <p class="ask-kicker">Live assistant</p>
+    <h2 id="ask-heading">Ask about Andrew</h2>
+    <p>
+      Ask about his AI work, his roles, or paste a job description. Each question
+      stands on its own. It reads his resume and shows the notes it opened.
+    </p>
+    <p class="ask-left" data-left>5 questions left today</p>
+  </div>
+  <div class="ask-log" data-log>
+    <p class="ask-empty" data-empty>
+      Start with his agents, or paste a role to see where he fits.
+    </p>
+  </div>
   <div class="ask-prompts">
     {
       prompts.map((prompt) => (
-        <button type="button" class="btn ask-prompt" data-prompt={prompt}>
-          {prompt}
+        <button type="button" class="btn ask-prompt" data-prompt={prompt.text}>
+          {prompt.label}
         </button>
       ))
     }
   </div>
-  <textarea
-    name="question"
-    rows="5"
-    maxlength="8000"
-    required
-    aria-labelledby="ask-label"
-    placeholder="Paste a question or a job description"
-  ></textarea>
-  <div class="ask-actions">
-    <button type="submit" class="btn btn-fill">Ask</button>
-    <p class="ask-status" role="status" aria-live="polite"></p>
-  </div>
-  <ol class="ask-steps" hidden></ol>
-  <div class="ask-answer" hidden></div>
-  <p class="ask-note">
-    This is a bounded assistant, not Andrew. Check the resume before you rely on an answer.
-  </p>
-</form>
+  <form class="ask-compose">
+    <label class="visually-hidden" for="ask-question">Question or job description</label>
+    <textarea
+      id="ask-question"
+      name="question"
+      rows="2"
+      maxlength="8000"
+      placeholder="Ask a question, or paste a job description"
+    ></textarea>
+    <button type="submit" class="btn btn-fill">Send</button>
+  </form>
+</section>
 
 <script>
-  const form = document.querySelector<HTMLFormElement>("[data-ask]");
-  if (form) {
-    const field = form.querySelector<HTMLTextAreaElement>("textarea");
-    const status = form.querySelector<HTMLElement>(".ask-status");
-    const steps = form.querySelector<HTMLOListElement>(".ask-steps");
-    const answer = form.querySelector<HTMLElement>(".ask-answer");
-    const submit = form.querySelector<HTMLButtonElement>("[type=submit]");
-    const history: { role: "user" | "assistant"; content: string }[] = [];
+  const root = document.querySelector<HTMLElement>("[data-ask]");
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>("form");
+    const field = root.querySelector<HTMLTextAreaElement>("textarea");
+    const log = root.querySelector<HTMLElement>("[data-log]");
+    const empty = root.querySelector<HTMLElement>("[data-empty]");
+    const left = root.querySelector<HTMLElement>("[data-left]");
+    const submit = root.querySelector<HTMLButtonElement>("[type=submit]");
+    let sending = false;
 
-    form.querySelectorAll<HTMLButtonElement>("[data-prompt]").forEach((button) => {
+    const setLeft = (remaining: number) => {
+      if (!left) return;
+      left.textContent =
+        remaining === 1 ? "1 question left today" : `${remaining} questions left today`;
+      if (remaining <= 0 && field && submit) {
+        field.disabled = true;
+        submit.disabled = true;
+        left.textContent = "Five questions are the limit for today.";
+      }
+    };
+
+    fetch("/api/ask")
+      .then((response) => response.json())
+      .then((data: { remaining?: number }) => {
+        if (typeof data.remaining === "number") setLeft(data.remaining);
+      })
+      .catch(() => undefined);
+
+    const appendLinkedText = (parent: HTMLElement, text: string) => {
+      const pattern = /https?:\/\/[^\s]+|[\w.+-]+@[\w.-]+\.[a-z]{2,}/gi;
+      let last = 0;
+      for (const match of text.matchAll(pattern)) {
+        const index = match.index ?? 0;
+        if (index > last) parent.append(text.slice(last, index));
+        const value = match[0];
+        const link = document.createElement("a");
+        link.href = value.includes("@") && !value.startsWith("http") ? `mailto:${value}` : value;
+        link.textContent = value;
+        link.rel = "noopener";
+        if (link.href.startsWith("http")) link.target = "_blank";
+        parent.append(link);
+        last = index + value.length;
+      }
+      if (last < text.length) parent.append(text.slice(last));
+    };
+
+    const addBubble = (role: "user" | "assistant", text: string) => {
+      if (!log) return null;
+      empty?.remove();
+      const bubble = document.createElement("article");
+      bubble.className = role === "user" ? "bubble bubble-user" : "bubble bubble-assistant";
+      const who = document.createElement("p");
+      who.className = "bubble-who";
+      who.textContent = role === "user" ? "You" : "Profile assistant";
+      bubble.append(who);
+      for (const part of text.split(/\n\n+/)) {
+        const body = document.createElement("p");
+        body.className = "bubble-body";
+        appendLinkedText(body, part);
+        bubble.append(body);
+      }
+      log.append(bubble);
+      bubble.scrollIntoView({ block: "nearest" });
+      return bubble;
+    };
+
+    root.querySelectorAll<HTMLButtonElement>("[data-prompt]").forEach((button) => {
       button.addEventListener("click", () => {
-        if (!field) return;
-        field.value = button.dataset.prompt ?? "";
+        if (!field || field.disabled) return;
+        if (!button.dataset.prompt) {
+          field.value = "";
+          field.placeholder = "Paste the job description";
+        } else {
+          field.value = button.dataset.prompt;
+        }
         field.focus();
       });
     });
 
-    form.addEventListener("submit", async (event) => {
+    form?.addEventListener("submit", async (event) => {
       event.preventDefault();
-      if (!field || !status || !steps || !answer || !submit) return;
+      if (sending || !field || !submit || !log) return;
       const question = field.value.trim();
       if (!question) return;
+      sending = true;
 
+      addBubble("user", question);
+      field.value = "";
       submit.disabled = true;
-      status.textContent = "Looking through the profile.";
-      steps.hidden = true;
-      steps.replaceChildren();
-      answer.hidden = true;
-      answer.replaceChildren();
 
-      history.push({ role: "user", content: question });
+      const thinking = document.createElement("div");
+      thinking.className = "thinking";
+      const thinkingTitle = document.createElement("p");
+      thinkingTitle.className = "bubble-who";
+      thinkingTitle.textContent = "Looking";
+      const thinkingList = document.createElement("ol");
+      thinking.append(thinkingTitle, thinkingList);
+      log.append(thinking);
+      log.scrollTop = log.scrollHeight;
+
+      const note = (text: string) => {
+        const item = document.createElement("li");
+        item.textContent = text;
+        thinkingList.append(item);
+        log.scrollTop = log.scrollHeight;
+      };
+      note("Reading the question");
+
       try {
         const response = await fetch("/api/ask", {
           method: "POST",
           headers: { "content-type": "application/json" },
-          body: JSON.stringify({ messages: history.slice(-6) }),
+          body: JSON.stringify({ messages: [{ role: "user", content: question }] }),
         });
-        const data = (await response.json()) as {
-          answer?: string;
-          error?: string;
-          steps?: { tool: string; detail: string }[];
-          citations?: string[];
-        };
-        if (!response.ok || !data.answer) {
-          status.textContent = data.error || "The assistant is unavailable right now.";
-          history.pop();
+        const type = response.headers.get("content-type") ?? "";
+        if (!type.includes("text/event-stream")) {
+          const data = (await response.json()) as { error?: string; remaining?: number };
+          thinking.remove();
+          addBubble("assistant", data.error || "The assistant is unavailable right now.");
+          if (typeof data.remaining === "number") setLeft(data.remaining);
           return;
         }
-        history.push({ role: "assistant", content: data.answer });
-        if (history.length > 6) history.splice(0, history.length - 6);
 
-        if (data.steps?.length) {
-          for (const step of data.steps) {
-            const item = document.createElement("li");
-            item.textContent = `${step.tool}: ${step.detail}`;
-            steps.append(item);
+        const reader = response.body?.getReader();
+        if (!reader) throw new Error("no stream");
+        const decoder = new TextDecoder();
+        let buffer = "";
+        let answer = "";
+        let citations: string[] = [];
+        while (true) {
+          const chunk = await reader.read();
+          if (chunk.done) break;
+          buffer += decoder.decode(chunk.value, { stream: true });
+          const parts = buffer.split("\n\n");
+          buffer = parts.pop() ?? "";
+          for (const part of parts) {
+            const event = part.match(/^event: (.+)$/m)?.[1] ?? "message";
+            const raw = part.match(/^data: (.+)$/m)?.[1] ?? "{}";
+            const data = JSON.parse(raw) as {
+              text?: string;
+              label?: string;
+              citations?: string[];
+              remaining?: number;
+            };
+            if (event === "status" && data.text) note(data.text);
+            if (event === "step" && data.label) note(data.label);
+            if (event === "answer" && data.text) {
+              answer = data.text;
+              citations = data.citations ?? [];
+            }
+            if (event === "done" && typeof data.remaining === "number") setLeft(data.remaining);
+            if (event === "error") {
+              thinking.remove();
+              addBubble("assistant", data.text || "The assistant is unavailable right now.");
+              return;
+            }
           }
-          steps.hidden = false;
         }
-        const paragraph = document.createElement("p");
-        paragraph.textContent = data.answer;
-        answer.append(paragraph);
-        if (data.citations?.length) {
+        if (!answer) {
+          thinking.remove();
+          addBubble("assistant", "I could not answer that from the public profile.");
+          return;
+        }
+        thinkingTitle.textContent = "Looked at";
+        const bubble = addBubble("assistant", answer);
+        if (bubble && citations.length) {
           const cite = document.createElement("p");
           cite.className = "ask-cite";
-          cite.textContent = `Sections used: ${data.citations.join(", ")}`;
-          answer.append(cite);
+          cite.textContent = `From ${citations.join(", ")}`;
+          bubble.append(cite);
         }
-        answer.hidden = false;
-        status.textContent = "";
-        field.value = "";
       } catch {
-        history.pop();
-        status.textContent = "The assistant is unavailable right now.";
+        thinking.remove();
+        addBubble("assistant", "The assistant is unavailable right now.");
       } finally {
-        submit.disabled = false;
+        sending = false;
+        if (!field.disabled) submit.disabled = false;
+        field.focus();
       }
     });
   }
