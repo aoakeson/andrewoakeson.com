@@ -1,6 +1,7 @@
 ---
 import Base from "../layouts/Base.astro";
 import AgentTrace from "../components/AgentTrace.astro";
+import Ask from "../components/Ask.astro";
 import Guardrails from "../components/Guardrails.astro";
 
 const description =
@@ -74,6 +75,7 @@ const person = {
       <a href="#ai-workflow">How I build with AI</a>
       <a href="#experience">Experience</a>
       <a href="#approach">How I work</a>
+      <a href="#ask">Ask</a>
       <a href="#contact">Contact</a>
     </nav>
   </header>
@@ -344,6 +346,10 @@ const person = {
           discussions during the platform redesign.
         </li>
       </ul>
+    </section>
+    <section class="section" id="ask">
+      <h2>Ask about this profile</h2>
+      <Ask />
     </section>
     <section class="section" id="contact">
       <h2>Contact</h2>

@@ -329,6 +329,69 @@ h1 {
   color: var(--color-ink);
 }
 
+.ask {
+  max-width: var(--measure);
+}
+
+.ask-prompts,
+.ask-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2xs);
+  align-items: center;
+}
+
+.ask-prompts {
+  margin-top: var(--space-sm);
+}
+
+.ask textarea {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin-top: var(--space-sm);
+  padding: var(--space-sm);
+  border: 1px solid var(--color-ink);
+  border-radius: var(--radius-control);
+  background: var(--color-paper);
+  color: var(--color-ink);
+  font: inherit;
+  line-height: var(--leading-body);
+  resize: vertical;
+}
+
+.ask-actions {
+  margin-top: var(--space-sm);
+}
+
+.ask-status,
+.ask-note,
+.ask-cite {
+  color: var(--color-muted);
+  font-size: var(--text-sm);
+}
+
+.ask-steps {
+  margin: var(--space-sm) 0 0;
+  padding-left: 1.15rem;
+  font-family: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  font-size: var(--text-sm);
+}
+
+.ask-answer {
+  margin-top: var(--space-sm);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-line);
+}
+
+.ask-answer p + p {
+  margin-top: var(--space-xs);
+}
+
+.ask-note {
+  margin-top: var(--space-sm);
+}
+
 .site-footer {
   padding-top: var(--space-lg);
   padding-bottom: var(--space-2xl);

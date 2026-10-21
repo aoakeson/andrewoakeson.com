@@ -1,0 +1,118 @@
+---
+const prompts = ["FHIR work", "Shipped SSO", "Agent guardrails"];
+---
+
+<form class="ask" data-ask>
+  <p id="ask-label">
+    Ask about the work on this page, or paste a job description. Answers use only
+    that public profile and cite the section they used.
+  </p>
+  <div class="ask-prompts">
+    {
+      prompts.map((prompt) => (
+        <button type="button" class="btn ask-prompt" data-prompt={prompt}>
+          {prompt}
+        </button>
+      ))
+    }
+  </div>
+  <textarea
+    name="question"
+    rows="5"
+    maxlength="8000"
+    required
+    aria-labelledby="ask-label"
+    placeholder="Paste a question or a job description"
+  ></textarea>
+  <div class="ask-actions">
+    <button type="submit" class="btn btn-fill">Ask</button>
+    <p class="ask-status" role="status" aria-live="polite"></p>
+  </div>
+  <ol class="ask-steps" hidden></ol>
+  <div class="ask-answer" hidden></div>
+  <p class="ask-note">
+    This is a bounded assistant, not Andrew. Check the resume before you rely on an answer.
+  </p>
+</form>
+
+<script>
+  const form = document.querySelector<HTMLFormElement>("[data-ask]");
+  if (form) {
+    const field = form.querySelector<HTMLTextAreaElement>("textarea");
+    const status = form.querySelector<HTMLElement>(".ask-status");
+    const steps = form.querySelector<HTMLOListElement>(".ask-steps");
+    const answer = form.querySelector<HTMLElement>(".ask-answer");
+    const submit = form.querySelector<HTMLButtonElement>("[type=submit]");
+    const history: { role: "user" | "assistant"; content: string }[] = [];
+
+    form.querySelectorAll<HTMLButtonElement>("[data-prompt]").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (!field) return;
+        field.value = button.dataset.prompt ?? "";
+        field.focus();
+      });
+    });
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      if (!field || !status || !steps || !answer || !submit) return;
+      const question = field.value.trim();
+      if (!question) return;
+
+      submit.disabled = true;
+      status.textContent = "Looking through the profile.";
+      steps.hidden = true;
+      steps.replaceChildren();
+      answer.hidden = true;
+      answer.replaceChildren();
+
+      history.push({ role: "user", content: question });
+      try {
+        const response = await fetch("/api/ask", {
+          method: "POST",
+          headers: { "content-type": "application/json" },
+          body: JSON.stringify({ messages: history.slice(-6) }),
+        });
+        const data = (await response.json()) as {
+          answer?: string;
+          error?: string;
+          steps?: { tool: string; detail: string }[];
+          citations?: string[];
+        };
+        if (!response.ok || !data.answer) {
+          status.textContent = data.error || "The assistant is unavailable right now.";
+          history.pop();
+          return;
+        }
+        history.push({ role: "assistant", content: data.answer });
+        if (history.length > 6) history.splice(0, history.length - 6);
+
+        if (data.steps?.length) {
+          for (const step of data.steps) {
+            const item = document.createElement("li");
+            item.textContent = `${step.tool}: ${step.detail}`;
+            steps.append(item);
+          }
+          steps.hidden = false;
+        }
+        const paragraph = document.createElement("p");
+        paragraph.textContent = data.answer;
+        answer.append(paragraph);
+        if (data.citations?.length) {
+          const cite = document.createElement("p");
+          cite.className = "ask-cite";
+          cite.textContent = `Sections used: ${data.citations.join(", ")}`;
+          answer.append(cite);
+        }
+        answer.hidden = false;
+        status.textContent = "";
+        field.value = "";
+      } catch {
+        history.pop();
+        status.textContent = "The assistant is unavailable right now.";
+      } finally {
+        submit.disabled = false;
+      }
+    });
+  }
+</script>
